@@ -40,7 +40,7 @@ C/C++的内容又多又杂，常常看到有人罗列相关书单，觉得毫无
 
     - **因为sizeof值在编译时确定，所以不能用来得到动态分配（运行时分配）存储空间的大小。**
 
-4. 同一结构体不同对象可以互相赋值吗？
+4. 同一不同对象可以互相赋值吗？
     - 可以，但含有指针成员时需要注意。
     
     - 对比类的对象赋值时深拷贝和浅拷贝。
@@ -62,7 +62,7 @@ C/C++的内容又多又杂，常常看到有人罗列相关书单，觉得毫无
 7. 结构体和类的区别？
     - 结构体的默认限定符是public；类是private。
     
-    - 结构体不可以继承，类可以。
+    - ~~结构体不可以继承，类可以。~~ C++中结构体也可以继承。
 
 8. malloc和new的区别？
     - malloc和free是标准库函数，支持覆盖；new和delete是运算符，并且支持重载。
@@ -72,7 +72,7 @@ C/C++的内容又多又杂，常常看到有人罗列相关书单，觉得毫无
     - malloc和free返回的是void类型指针（必须进行类型转换），new和delete返回的是具体类型指针。
 
 9. 指针和引用区别？
-    - 引用只是别名，不占用具体存储空间，只有声明没有定义；指针时具体变量，需要占用存储空间。
+    - 引用只是别名，不占用具体存储空间，只有声明没有定义；指针是具体变量，需要占用存储空间。
     
     - 引用在声明时必须初始化为另一变量，一旦出现必须为typename refname &varname形式；指针声明和定义可以分开，可以先只声明指针变量而不初始化，等用到时再指向具体变量。
     
@@ -163,7 +163,7 @@ C/C++的内容又多又杂，常常看到有人罗列相关书单，觉得毫无
     
     - int *p(int)是函数声明，函数名是p，参数是int类型的，返回值是int *类型的。
     
-    - int (*p)()是函数指针，强调是指针，该指针指向的函数具有int类型参数，并且返回值是int类型的。
+    - int (*p)(int)是函数指针，强调是指针，该指针指向的函数具有int类型参数，并且返回值是int类型的。
 
 19. 常量指针和指针常量区别？
     - 常量指针是一个指针，读成常量的指针，指向一个只读变量。如int const *p或const int *p。
@@ -245,7 +245,7 @@ C/C++的内容又多又杂，常常看到有人罗列相关书单，觉得毫无
 3. 对象存储空间？
     - 非静态成员的数据类型大小之和。
     
-    - 编译器加入的额外成员变量（如指向虚函数的指针）。
+    - 编译器加入的额外成员变量（如指向虚函数表的指针）。
     
     - 为了边缘对齐优化加入的panding。
 
@@ -298,7 +298,7 @@ C/C++的内容又多又杂，常常看到有人罗列相关书单，觉得毫无
     - 形参传递是调用拷贝构造函数（调用的被赋值对象的拷贝构造函数），但并不是所有出现"="的地方都是使用赋值运算符，如下：
 
             Student s;
-            Student s1 = 2;    // 调用拷贝构造函数
+            Student s1 = s;    // 调用拷贝构造函数
             Student s2;
             s2 = s;    // 赋值运算符操作
 
@@ -450,22 +450,24 @@ STL内容虽然看起来很多，单独成书都不是问题（《STL源码剖�
 用法：
 
         定义：
-            mao<T_key, T_value> map;
+            map<T_key, T_value> mymap;
 
         插入元素：
-            map.insert(pair<T_key, T_value>(key, value));    // 同key不插入
-            map.insert(map<T_key, T_value>::value_type(key, value));    // 同key不插入
-            map[key] = value;    // 同key覆盖
+            mymap.insert(pair<T_key, T_value>(key, value));    // 同key不插入
+            mymap.insert(map<T_key, T_value>::value_type(key, value));    // 同key不插入
+            mymap[key] = value;    // 同key覆盖
 
         删除元素：
-            map.erase(key);    // 按值删
-            map.erase(iterator);    // 按迭代器删
+            mymap.erase(key);    // 按值删
+            mymap.erase(iterator);    // 按迭代器删
 
         修改元素：
-            map[key] = new_value;
+            mymap[key] = new_value;
 
         遍历容器：
-              for(auto it = vec.begin(); it != vec.end(); ++it) {......}
+              for(auto it = mymap.begin(); it != mymap.end(); ++it) {
+                cout << it->first << " => " << it->second << '\n';
+              }
 
 实现：
 
